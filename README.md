@@ -1,0 +1,1 @@
+This is a prototype diet consulation web application developed using ASP.NET. It has speech synthesis integrated into it using javascript.
