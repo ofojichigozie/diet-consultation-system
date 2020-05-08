@@ -1,0 +1,46 @@
+﻿@functions{
+
+    public static Random rnd = new Random();
+    
+    public static String GetBreakFast()
+    {
+        String[] breakFast = { "Boiled Yam + Vegetable Mackerel Fish Stew + Hot Beverage",
+                             "Pancake + Hot Beverages",
+                             "Bread + Egg Stew + Beverages",
+                             "Breakfast Cereal + Boiled Egg + Hot Beverage",
+                             "Bread + Peanut Butter Spread",
+                             "Breakfast Cereal + Banana",
+                             "Moi-moi + Pap + Fruits"};
+
+        //Random rnd = new Random();
+        return breakFast[rnd.Next(0, 7)];
+    }
+    
+    public static String GetLunch()
+    {
+        String[] lunch = {"Jollof Rice + Beef or Chicken in Stew + Vegetable",
+                         "Eba + Any choice of soup",
+                         "Boiled Yam + Beans Pottage",
+                         "Pounded Yam + Any choice of soup",
+                         "Spaghetti Jollof + Chicken Shred + Boiled Mixed Vegetable",
+                         "Vegetable Palm Oil Rice",
+                         "Pounded Yam + Any soup of choice"};
+
+        //Random rnd = new Random();
+        return lunch[rnd.Next(0, 7)];
+    }
+    
+    public static String GetDinner()
+    {
+        String[] dinner = { "Boiled Sweet Potatoe + Egg Stew",
+                          "Grilled Irish Potatoe + Fish Stew",
+                          "White Rice + Chicken Stew + Boiled Vegetables",
+                          "Couscous + Vegetable Mackerel Sauce",
+                          "Yam/Vegetable Pottage",
+                          "Spaghetti Corned Beef Stew",
+                          "Macaroni + Shrimp Stew + Mixed Vegetable"};
+
+        //Random rnd = new Random();
+        return dinner[rnd.Next(0, 7)];
+    }
+}

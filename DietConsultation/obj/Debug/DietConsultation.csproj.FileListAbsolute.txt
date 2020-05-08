@@ -1,0 +1,10 @@
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\bin\DietConsultation.dll
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\bin\DietConsultation.pdb
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\obj\Debug\DietConsultation.csprojResolveAssemblyReference.cache
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\obj\Debug\DietConsultation.dll
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\obj\Debug\DietConsultation.pdb
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\2018\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\bin\DietConsultation.dll
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\2018\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\bin\DietConsultation.pdb
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\2018\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\obj\Debug\DietConsultation.csprojResolveAssemblyReference.cache
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\2018\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\obj\Debug\DietConsultation.dll
+C:\Users\CHIGOZIE OFOJI\Documents\CurrentFinalists\2018\Erochukwu - Diet Consultation\Project\Software\DietConsultation\DietConsultation\obj\Debug\DietConsultation.pdb

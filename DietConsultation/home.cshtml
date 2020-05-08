@@ -1,0 +1,281 @@
+﻿<!--Home Page-->
+@{
+    String message = null;
+}
+
+@{
+    /*Get user's information for diet consultation*/
+    if(IsPost){
+        if(Request["proceedBtn"] != null){
+            String fullName = Request["fullName"].Trim();
+            String sex = Request["sex"].Trim();
+            String DOB = Request["DOB"].Trim();
+            double weight = Convert.ToDouble(Request["weight"]);
+            double height = Convert.ToDouble(Request["height"]);
+            String activityLevel = Request["activityLevel"].Trim();
+            int daysInWeek = Convert.ToInt16(Request["daysInWeek"]);
+            int hoursInDay = Convert.ToInt16(Request["hoursInDay"]);
+            String healthChallenge = (Request["healthStatus"].Equals("Yes")) ? Request["healthChallenge"].Trim() : "";
+
+            int age = 0;
+            if(DOB.Contains('-')){
+                String[] DOBSplit = DOB.Split('-');
+                int yearOfBirth = Convert.ToInt16(DOBSplit.First());
+                if(yearOfBirth < DateTime.Now.Year){
+                    //Compute the user's age
+                    age = DateTime.Now.Year - yearOfBirth;
+                    
+                    //Start and set session variables for the user
+                    Session.Timeout = 60;
+                    Session["fullname"] = fullName;
+                    Session["sex"] = sex;
+                    Session["DOB"] = DOB;
+                    Session["weight"] = weight;
+                    Session["height"] = height;
+                    Session["activityLevel"] = activityLevel;
+                    Session["daysInWeek"] = daysInWeek;
+                    Session["hoursInDay"] = hoursInDay;
+                    Session["healthChallenge"] = healthChallenge;
+                    Session["age"] = age;
+
+                    //Compute the Body Mass Index (BMI)
+                    double BMI = Math.Round(weight / Math.Pow(height, 2), 2);
+                    Session["BMI"] = BMI;
+                    
+                    //Compute the Estimated Energy Requirement (EER)
+                    double activityLevelValue = 0;
+                    double EER = 0;
+                    
+                    if(sex.Equals("Male")){
+                        if(activityLevel.Equals("Sedentary")){
+                            activityLevelValue = 1.00;
+                        }else if(activityLevel.Equals("Low Active")){
+                            activityLevelValue = 1.11;
+                        }else if(activityLevel.Equals("Active")){
+                            activityLevelValue = 1.26;
+                        }else if(activityLevel.Equals("Very Active")){
+                            activityLevelValue = 1.48;
+                        }
+                        
+                        //EER Calculation
+                        EER = Math.Round(662 - (9.53 * age) + (activityLevelValue * 15.91 * weight) + (539.6 * height ));
+                        
+                    }else if(sex.Equals("Female")){
+                        if (activityLevel.Equals("Sedentary")){
+                            activityLevelValue = 1.00;
+                        }else if (activityLevel.Equals("Low Active")){
+                            activityLevelValue = 1.12;
+                        } else if (activityLevel.Equals("Active")){
+                            activityLevelValue = 1.27;
+                        }else if (activityLevel.Equals("Very Active")){
+                            activityLevelValue = 1.45;
+                        }
+                        
+                        //EER Calculation
+                        EER = Math.Round(354 - (6.91 * age) + (activityLevelValue * 9.36 * weight)+ (726 * height));
+                    }
+                    
+                    //Set Session variable for EER
+                    Session["EER"] = EER;
+                    
+                    //Redirect to BMI page
+                    Response.Redirect("bmi");
+                }else{
+                    message = String.Format("Your year of birth ({0}) is not valid", yearOfBirth);
+                }
+            }
+           
+        }
+    }
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<meta http-equiv="refresh" content="15; /home.cshtml">-->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Diet Consultation - Home</title>
+        <!-- Bootstrap core CSS -->
+        <link href="/Shared/css/bootstrap.css" rel="stylesheet">
+        <link href="/Shared/css/style.css" rel="stylesheet">
+        <script src="/Shared/js/respond.js"></script>
+        <script src="/Shared/js/webSpeech.js"></script>
+    </head>
+    <body style="background-color: #FBE1DF">
+        <!--Navigation Section-->
+        <nav class="navbar navbar-inverse" style="margin-bottom: 0px;">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse navbar-right">
+              <ul class="nav navbar-nav">
+                <li class=""><a href="home"> Home</a></li>
+                <li class=""><a href="#"> Enquire</a></li>
+                <li class="disabled"><a href="bmi"> BMI</a></li>
+                <li class="disabled"><a href="meal_plan"> Weekly Meal Plan</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+
+        <!--Render the Slider-->
+        @RenderPage("Shared/slider.cshtml");
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="panel panel-default">
+                      <div class="panel-heading text-center">
+                        <h3 class="panel-title">Provide the details</h3>
+                      </div>
+                      <div class="panel-body">
+                        <form class="form" action="home" method="POST">
+                          <div class="form-group">
+                            <label class="" for="fullName">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" title="Enter your full name" required>
+                          </div>
+                          <div class="form-group">
+                              <label class="" for="sex">Sex</label><br />
+                              <label class="radio-inline"><input type="radio" name="sex" id="" value="Male" checked>Male</label>
+                              <label class="radio-inline"><input type="radio" name="sex" id="" value="Female">Female</label>
+                          </div>
+                          <div class="form-group">
+                            <label class="" for="DOB">Date of Birth</label>
+                            <input type="date" class="form-control" id="DOB" name="DOB" title="Enter your date of birth" required>
+                          </div>
+                          
+                          <div class="form-group">
+                            <label class="" for="weight"> Current Weight (Kg)</label>
+                            <input type="number" class="form-control" id="weight" name="weight" title="Enter your weight in kilogram" required>
+                          </div>
+                          <div class="form-group">
+                            <label class="" for="height">Height (m)</label>
+                            <input type="number" step="0.1" class="form-control" id="height" name="height" title="Enter your height in meters" required>
+                          </div>
+                          <div class="form-group">
+                            <label class="" for="weight">Current Daily Activity Level</label>
+                            <p id="levelDesc" class="text-justify small text-danger bg-warning">
+                                Typical activities of daily living such as gardening (no lifting), household tasks, light activity while sitting, loading/unloading car, mopping, mowing lawn (power mower), etc.
+                            </p>
+                            <select id="activityLevel" class="form-control" name="activityLevel">
+                                <option value="Sedentary">Sedentary</option>
+                                <option value="Low Active">Low Active</option>
+                                <option value="Active">Active</option>
+                                <option value="Very Active">Very Active</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label class="" for="daysInWeek">How many days do you work in a week?</label>
+                            <input type="number" class="form-control" id="daysInWeek" name="daysInWeek" min="0" max="7" title="How many days do you work in a week?" required>
+                          </div>
+                          <div class="form-group">
+                            <label class="" for="hoursInDay">How many hours do you work in a day?</label>
+                            <input type="number" class="form-control" id="hoursInDay" name="hoursInDay" min="0" max="24" title="How many hours do you work in a day?" required>
+                          </div>
+                          <div class="form-group">
+                            <label class="" for="healthStatus">Do you currently have any health challenge?</label><br />
+                            <label class="radio-inline"><input type="radio" name="healthStatus" id="" value="Yes" checked>Yes</label>
+                            <label class="radio-inline"><input type="radio" name="healthStatus" id="" value="No">No</label>
+                          </div>
+                          <div class="form-group">
+                            <label class="" for="healthChallenge">If yes, what is the health challenge?</label>
+                            <input type="text" class="form-control" id="healthChallenge" name="healthChallenge" title="If yes, what is the health challenge?">
+                          </div>
+                          <div class="form-group">
+                            <input type="submit" class="form-control btn btn-success" id="submit" value="Proceed" name="proceedBtn">
+                          </div>
+
+                        </form>
+                      </div>
+                    </div>
+                </div><!-- End of col-md-6 -->
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+
+        <!--Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color: #EAEAFF;">
+                    <div class="modal-header" style="background-image: linear-gradient(#000, #000 60%, #000); color: white;">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h5 class="modal-title" id="myModalLabel">
+                            Message
+                        </h5>
+                    </div><hr style="background-color: white;">
+                    <div class="modal-body">
+                        <h4 class="text-center text-warning"><b>@(message)</b></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <div style="font-weight: bold;">
+                            <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--Modal -->
+
+        <script type="text/javascript">
+            speak("Please, provide all the information. It is required by the diet consultant to make recommendations for your nutritional needs");
+        </script>
+
+        <!-- javascript -->
+        <script src="/Shared/js/jquery-1.11.3.min.js"></script>
+        <script src="/Shared/js/bootstrap.min.js"></script>
+        <script src="/Shared/js/jquery.backstretch.min.js"></script>
+        <script src="/Shared/js/scripts.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(
+                function () {
+                    $("#activityLevel").change(
+                        function () {
+                            var level = $(this).val();
+                            if (level == "Sedentary") {
+                                $("#levelDesc").html("Typical activities of daily living such as gardening (no lifting), household tasks, light activity while sitting, loading/unloading car, mopping, mowing lawn (power mower), etc.");
+                            } else if (level == "Low Active") {
+                                $("#levelDesc").html("In addition to the sedentary activity level, 30 to 60 minutes of moderate activity daily such as calisthenics (no weight), cycling (leisurely), golf (without cart), swimming (slow), walking 3-4mph, etc.");
+                            } else if (level == "Active") {
+                                $("#levelDesc").html("In addition to the sedentary activity level, 60 minutes of moderate activity daily such as calisthenics (no weight), cycling (leisurely), golf (without cart), swimming (slow), walking 3-4mph, etc.");
+                            } else if (level == "Very Active") {
+                                $("#levelDesc").html("In addition to the sedentary and active activity levels, additional 60 minutes of vigorous activity such as chopping wood, climbing hills (no load), cycling (moderately), jogging (10-min miles), rope skipping, skating, swimming, tennis (doubles), walking (5 mph) OR 120 minutes of additional moderate activity.");
+                            }
+                        }
+                    );
+                }
+            );
+        </script>
+
+    </body>
+</html>
+
+@{
+    /***********************
+    * Check if POST request
+    **********************/
+    if(IsPost){
+        
+        //If login button is clicked
+        if(Request["proceedBtn"] != null){
+            if(!String.IsNullOrEmpty(message)){
+                <script type='text/javascript'>
+                    $('#myModal').modal()
+                </script>
+            }
+        }
+    }
+    
+    if(!String.IsNullOrEmpty(message)){
+            <script type='text/javascript'>
+                $('#myModal').modal()
+            </script>
+    }
+}

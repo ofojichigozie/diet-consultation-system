@@ -1,0 +1,265 @@
+﻿<!--Details Page-->
+
+@{
+    String message = null;
+}
+
+@{
+    //Get BMI and EER
+    double BMI = 0;
+    double EER = 0;
+    String weightCategory = null;
+    
+    if(Session["BMI"] != null & Session["EER"] != null){
+        BMI = (double)Session["BMI"];
+        EER = (double)Session["EER"];
+        
+        if(BMI > 0){
+            if(BMI < 18.5){
+                weightCategory = "Underweight";
+            }else if((BMI >= 18.5) & (BMI < 25)){
+                weightCategory = "Normal weight";
+            }else if((BMI >= 25) & (BMI < 30)){
+                weightCategory = "Overweight";
+            }else if(BMI > 30){
+                weightCategory = "Obese";
+            }
+        }else{
+            <p>No data for BMI calculation</p>
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<meta http-equiv="refresh" content="15; /home.cshtml">-->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Diet Consultation - Details</title>
+        <!-- Bootstrap core CSS -->
+        <link href="/Shared/css/bootstrap.css" rel="stylesheet">
+        <link href="/Shared/css/style.css" rel="stylesheet">
+        <script src="/Shared/js/respond.js"></script>
+        <script src="/Shared/js/webSpeech.js"></script>
+    </head>
+    <body style="background-color: #FBE1DF">
+        <!--Navigation Section-->
+        <nav class="navbar navbar-inverse" style="margin-bottom: 0px;">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse navbar-right">
+              <ul class="nav navbar-nav">
+                <li class=""><a href="home"> Home</a></li>
+                <li class=""><a href="#"> Enquire</a></li>
+                <li class=""><a href="bmi"> BMI</a></li>
+                <li class=""><a href="meal_plan"> Weekly Meal Plan</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+
+        <!--Render the Slider-->
+        @RenderPage("Shared/slider.cshtml");
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                      <!--BMI Section-->
+                      <div class="panel-heading text-center">
+                        <h3 class="panel-title">Body Mass Index (BMI)</h3>
+                      </div>
+                      <div class="panel-body">
+                        <div class="text-center">
+                            <h1 style="font-weight: bold; font-size:40pt;">@(BMI)<span style="font-size:15pt;">Kg/m<sup>2</sup></span></h1>
+                            <p style="font-weight: bold;">@(weightCategory)</p>
+                        </div>
+                      </div>
+                      <!--EER Section-->
+                      <div class="panel-heading text-center">
+                        <h3 class="panel-title">Estimated Energy Requirement (EER)</h3>
+                      </div>
+                      <div class="panel-body">
+                        <div class="text-center">
+                            <h1 style="font-weight: bold; font-size:40pt;">@(EER)<span style="font-size:15pt;">Kcal/day</span></h1>
+                        </div>
+                      </div>
+                      @{
+                        if(BMI >= 25){
+                            <div class="panel-heading text-center">
+                                <h3 class="panel-title">Tips for loosing weight</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="text-justify" style="font-size: 10pt; color: #035f10;">
+                                    The least intrusive weight loss methods, and those most often recommended, are adjustments to eating patterns and increased physical activity, generally in the form of exercise. The World Health Organization recommends that you combine a reduction of processed foods high in saturated fats, sugar and salt and caloric content of the diet with an increase in physical activity. An increase in fiber intake is also recommended for regulating bowel movements. Other methods of weight loss include use of drugs and supplements that decrease appetite, block fat absorption, or reduce stomach volume.
+                                </div>
+                            </div>
+                        }
+                      }
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel panel-default">
+                      <!--Nutritional Requirement Section-->
+                      <div class="panel-heading text-center">
+                        <h3 class="panel-title">Nutritional Requirement</h3>
+                      </div>
+                      <div class="panel-body">
+                        <div class="text-center">
+                            <table class="table table-bordered table-striped">
+                                <tr style="font-weight: bold; background-color: #437d48; color: white;"><td>Macronutrient</td></tr>
+                                <tr style="font-weight: bold;">
+                                    <td>Nutrient</td>
+                                    <td>Qty</td>
+                                    <td>Common sources</td>
+                                </tr>
+                                <tr>
+                                    <td>Water</td>
+                                    <td>
+                                        @{
+                                            if((String)Session["sex"] == "Male"){
+                                                <span>3.7 L/Day</span>
+                                            }
+                                            else if ((String)Session["sex"] == "Female")
+                                            {
+                                                <span>2.7 L/Day</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>water, watermelon, iceberg lettuce</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Carbohydrates</td>
+                                    <td>
+                                        @{
+                                            if((String)Session["sex"] == "Male"){
+                                                <span>45-65% of calories: 130g/day</span>
+                                            }
+                                            else if ((String)Session["sex"] == "Female")
+                                            {
+                                                <span>45-65% of calories: 130g/day</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>grains, yam, potatoe, fruits</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Protein</td>
+                                    <td>
+                                        @{
+                                            if((String)Session["sex"] == "Male"){
+                                                <span>56 g/day</span>
+                                            }
+                                            else if ((String)Session["sex"] == "Female")
+                                            {
+                                                <span>46 g/day</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>meats, fish, legumes, nuts, milk, cheeses, eggs</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Fibre</td>
+                                    <td>
+                                        @{
+                                            if((String)Session["sex"] == "Male"){
+                                                <span>38 g/day</span>
+                                            }
+                                            else if ((String)Session["sex"] == "Female")
+                                            {
+                                                <span>25 g/day</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>barley, bulgur, rolled oats, legumes, nuts, beans, apples</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Fat</td>
+                                    <td>
+                                        20–35% of calories
+                                    </td>
+                                    <td>oils, butter, nuts, seeds, fatty meat cuts, egg yolk, cheeses</td>
+                                </tr>
+
+                            </table>
+
+                            <table class="table table-bordered table-striped">
+                                <tr style="font-weight: bold; background-color: #437d48; color: white;"><td>Micronutrient</td></tr>
+                                <tr style="font-weight: bold;">
+                                    <td>Nutrient</td>
+                                    <td>Common sources</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Vitamin A</td>
+                                    <td>cod liver oil, liver, dehydrated red sweet peppers, veal, dehydrated carrots</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Vitamin B: B1, B2, B3, B5, B6, B7, B9, B12</td>
+                                    <td>fortified food and beverage products, dried mushrooms, beef liver, rice bran, organ meats, eggs, fish, meat, seeds, nuts</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Vitamin C</td>
+                                    <td>fortified beverages, dried sweet peppers, raw acerola, dried chives and coriander, rose hips, fortified food products</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Vitamin D</td>
+                                    <td>cod liver oil, mushrooms (if exposed to ultraviolet light), halibut, mackerel, canned sockeye salmon</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Vitamin K</td>
+                                    <td>dried spices, fresh parsley, cooked and raw kale, chard, other leaf vegetables</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Calcium</td>
+                                    <td>fortified cereals, beverages, tofu, energy bars, and baby foods, dried basil and other spices, dried whey, cheese, milk powder</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Iron</td>
+                                    <td>dried thyme and other spices, fortified foods, animal organ meats</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Iodine</td>
+                                    <td>iodized salt, kelp, cod</td>
+                                </tr>
+
+                            </table>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <!--<div class="col-md-2"></div>-->
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            speak("");
+        </script>
+
+        <!-- javascript -->
+        <script src="/Shared/js/jquery-1.11.3.min.js"></script>
+        <script src="/Shared/js/bootstrap.min.js"></script>
+        <script src="/Shared/js/jquery.backstretch.min.js"></script>
+        <script src="/Shared/js/scripts.js"></script>
+    </body>
+</html>

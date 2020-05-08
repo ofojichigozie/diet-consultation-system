@@ -1,0 +1,6 @@
+﻿@{
+    if(Session.Count > 0){
+        Session.Clear();
+        Response.Redirect("login");
+    }
+}

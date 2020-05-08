@@ -1,0 +1,116 @@
+﻿<!--BMI Page-->
+@{
+    String message = null;
+}
+
+@{
+    double bmi = 0;
+    
+    if(Session["BMI"] != null){
+        bmi = (double)Session["BMI"];
+    }
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<meta http-equiv="refresh" content="15; /home.cshtml">-->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Diet Consultation - BMI</title>
+        <!-- Bootstrap core CSS -->
+        <link href="/Shared/css/bootstrap.css" rel="stylesheet">
+        <link href="/Shared/css/style.css" rel="stylesheet">
+        <script src="/Shared/js/respond.js"></script>
+        <script src="/Shared/js/webSpeech.js"></script>
+    </head>
+    <body style="background-color: #FBE1DF">
+        <!--Navigation Section-->
+        <nav class="navbar navbar-inverse" style="margin-bottom: 0px;">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse navbar-right">
+              <ul class="nav navbar-nav">
+                <li class=""><a href="home"> Home</a></li>
+                <li class=""><a href="#"> Enquire</a></li>
+                <li class=""><a href="bmi"> BMI</a></li>
+                <li class=""><a href="meal_plan"> Weekly Meal Plan</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+
+        <!--Render the Slider-->
+        @RenderPage("Shared/slider.cshtml");
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="panel panel-default">
+                      <div class="panel-heading text-center">
+                        <h3 class="panel-title">Body Mass Index (BMI)</h3>
+                      </div>
+                      <div class="panel-body">
+                        <div class="text-center">
+                            <p style="font-weight: bold">The Body Mass Index (BMI) attempts to quantify the amount of tissue mass (muscle, fat, and bone) in an individual, and then categorize that person as underweight, normal weight, overweight, or obese based on that value. Based on the information you provided, your BMI is:</p>
+                            @{
+                                if(bmi > 0){
+                                    <h1 style="font-weight: bold; font-size:50pt;">@(bmi)<span style="font-size:20pt;">Kg/m<sup>2</sup></span></h1>
+                                    if(bmi < 18.5){
+                                        <p style="font-weight: bold;">Underweight</p>
+                                    }else if((bmi >= 18.5) & (bmi < 25)){
+                                        <p style="font-weight: bold;">Normal weight</p>
+                                        <script type="text/javascript">
+                                            speak("Based on your details, you have a normal weight");
+                                        </script>
+                                    }
+                                    else if ((bmi >= 25) & (bmi < 30))
+                                    {
+                                        <p style="font-weight: bold;">Overweight: <span style="color: #ce1e1e;">You might need to lose weight</span></p>
+                                        <script type="text/javascript">
+                                            speak("Based on your details, you are over-weight and might need to lose weight");
+                                        </script>
+                                    }
+                                    else if (bmi > 30)
+                                    {
+                                        <p style="font-weight: bold;">Obese: <span style="color: #ce1e1e;">You really need to lose weight</span></p>
+                                        <script type="text/javascript">
+                                            speak("Based on your details, you are obese and really needs to lose weight");
+                                        </script>
+                                    }
+                                    <p><a href="/Media/BMI Chart.png" target="_blank">View the BMI chart</a></p>
+                                    <p>To see more details and get diet recommendation, click <a href="details">here</a></p>
+                                }
+                                else
+                                {
+                                    <p>No data for BMI calculation</p>
+                                }
+                            }
+                        </div>
+                      </div>
+                    </div>
+                </div><!-- End of col-md-6 -->
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            //speak("Please, provide all the information. It is required by the diet consultant to make recommendations for your nutritional needs");
+        </script>
+
+        <!-- javascript -->
+        <script src="/Shared/js/jquery-1.11.3.min.js"></script>
+        <script src="/Shared/js/bootstrap.min.js"></script>
+        <script src="/Shared/js/jquery.backstretch.min.js"></script>
+        <script src="/Shared/js/scripts.js"></script>
+    </body>
+</html>

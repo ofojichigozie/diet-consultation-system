@@ -1,0 +1,174 @@
+﻿<!--Admin login page-->
+@{
+    String message = null;
+}
+
+@{
+    Database database = null;
+    String dbName = "Database";
+    try{
+        database = Database.Open(dbName);
+        message = "Connected to database";
+    }catch(Exception ex){
+        message = ex.Message;
+    }
+}
+
+@{
+    /***********************
+     * Check if POST request
+     **********************/
+    if(IsPost){
+       
+       if(Request["login"] != null){
+           //Get admin login details
+           var username = Request["username"];
+           var password = Request["password"];
+           var hashedPassword = System.Text.Encoding.UTF8.GetString((new System.Security.Cryptography.MD5CryptoServiceProvider()).ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)));
+           //Check if values are not empty
+           if(!String.IsNullOrEmpty(username) & !String.IsNullOrEmpty(password)){
+               var authenticateSQl = String.Format("SELECT * FROM admin WHERE username='{0}' AND password='{1}'", username, hashedPassword);
+               var row = database.Query(authenticateSQl);
+               if(row.Count() == 1){
+                   Response.Redirect("main");
+               }else{
+                   message = "Unauthorized access denied";
+               }
+           }else{
+               message = "Some fields are empty";
+           }
+           
+       }
+    }
+}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Diet Consultation - Admin</title>
+        <!-- Bootstrap core CSS -->
+        <link href="/Shared/css/bootstrap.css" rel="stylesheet">
+        <link href="/Shared/css/style.css" rel="stylesheet">
+        <script src="/Shared/js/respond.js"></script>
+        <script src="/Shared/js/webSpeech.js"></script>
+    </head>
+    <body>
+        
+        <!--Navigation Section-->
+        <nav class="navbar navbar-default" style="margin-bottom: 0px;">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse navbar-right">
+              <ul class="nav navbar-nav">
+                <li class=""><a href="/index"> Public Area</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+
+        <!--Render the Slider-->
+        @RenderPage("/Shared/slider.cshtml");
+
+        <section>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-3">
+              </div>
+              <div class="col-md-6">
+                <div class="panel panel-default">
+                  <div class="panel-heading text-center">
+                    <h3 class="panel-title">Admin</h3>
+                  </div>
+                  <div class="panel-body">
+                    <form class="form" action="login.cshtml" method="POST" name="loginForm">
+                      <div class="form-group">
+                        <label class="sr-only" for="username">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Username" name="username">
+                      </div>
+                      <div class="form-group">
+                        <label class="sr-only" for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+                      </div>
+                      <div class="form-group">
+                        <input type="submit" class="form-control btn btn-danger" id="submit" value="Login" name="login">
+                      </div>
+
+                    </form>
+                  </div>
+                </div>
+              </div><!-- col-md-6 end -->
+
+              <div class="col-md-3">
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!--Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color: #EAEAFF;">
+                    <div class="modal-header" style="background-image: linear-gradient(#000, #000 60%, #000); color: white;">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h5 class="modal-title" id="myModalLabel">
+                            Message
+                        </h5>
+                    </div><hr style="background-color: white;">
+                    <div class="modal-body">
+                        <h4 class="text-center text-warning"><b>@(message)</b></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <div style="font-weight: bold;">
+                            <button class="btn btn-primary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--Modal -->
+
+        <!-- javascript -->
+        <script src="/Shared/js/jquery-1.11.3.min.js"></script>
+        <script src="/Shared/js/bootstrap.min.js"></script>
+    </body>
+</html>
+
+@{
+    if(database != null){
+        database.Close();
+    }
+}
+
+@{
+    /***********************
+    * Check if POST request
+    **********************/
+    if(IsPost){
+        
+        //If login button is clicked
+        if(Request["login"] != null){
+            if(!String.IsNullOrEmpty(message)){
+                <script type='text/javascript'>
+                    $('#myModal').modal()
+                </script>
+            }
+        }
+    }
+    
+    if(!String.IsNullOrEmpty(message)){
+            <script type='text/javascript'>
+                $('#myModal').modal()
+            </script>
+    }
+}
